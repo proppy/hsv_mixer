@@ -1,0 +1,25 @@
+channels:
+  - litex-hub
+  - conda-forge
+dependencies:
+  - open_pdks.sky130a=1.0.290
+  - magic
+  - openroad
+  - netgen
+  - yosys
+  - xls
+  - gdstk
+  - cairosvg
+  - svgutils
+  - iverilog
+  - pip:
+    - pyyaml
+    - click
+    - pandas
+    - coloredlogs
+    - strsimpy
+    - PySpice
+    - klayout
+    - https://github.com/PyHDI/Pyverilog/archive/develop.zip
+    - cocotb
+    - pytest
