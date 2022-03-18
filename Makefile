@@ -11,7 +11,7 @@ export COCOTB_REDUCED_LOG_FMT=1
 export PYTHONPATH := test:$(PYTHONPATH)
 export LIBPYTHON_LOC=$(shell cocotb-config --libpython)
 
-all: test_encoder test_debounce test_pwm test_rgb_mixer hls2rgb
+all: test_encoder test_debounce test_pwm test_rgb_mixer hsv2rgb
 
 hsv2rgb:
 	interpreter_main src/hsv2rgb.x
@@ -23,7 +23,7 @@ hsv2rgb:
 test_rgb_mixer:
 	rm -rf sim_build/
 	mkdir sim_build/
-	iverilog -o sim_build/sim.vvp -s rgb_mixer -s dump -g2012 src/rgb_mixer.v test/dump_rgb_mixer.v src/ src/encoder.v src/debounce.v src/pwm.v
+	iverilog -o sim_build/sim.vvp -s rgb_mixer -s dump -g2012 src/rgb_mixer.v test/dump_rgb_mixer.v src/ src/encoder.v src/debounce.v src/pwm.v src/hsv2rgb.v
 	PYTHONOPTIMIZE=${NOASSERT} MODULE=test.test_rgb_mixer vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
 	! grep failure results.xml
 

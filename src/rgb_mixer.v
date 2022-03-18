@@ -16,7 +16,9 @@ module rgb_mixer (
     wire enc0_a_db, enc0_b_db;
     wire enc1_a_db, enc1_b_db;
     wire enc2_a_db, enc2_b_db;
-    wire [7:0] enc0, enc1, enc2;
+    wire [10:0] enc0;
+    wire [7:0] enc1;
+    wire [7:0] enc2;
 
     // debouncers, 2 for each encoder
     debounce #(.HIST_LEN(8)) debounce0_a(.clk(clk), .reset(reset), .button(enc0_a), .debounced(enc0_a_db));
@@ -29,13 +31,21 @@ module rgb_mixer (
     debounce #(.HIST_LEN(8)) debounce2_b(.clk(clk), .reset(reset), .button(enc2_b), .debounced(enc2_b_db));
 
     // encoders
-    encoder #(.WIDTH(8)) encoder0(.clk(clk), .reset(reset), .a(enc0_a_db), .b(enc0_b_db), .value(enc0));
+    encoder #(.WIDTH(11)) encoder0(.clk(clk), .reset(reset), .a(enc0_a_db), .b(enc0_b_db), .value(enc0));
     encoder #(.WIDTH(8)) encoder1(.clk(clk), .reset(reset), .a(enc1_a_db), .b(enc1_b_db), .value(enc1));
     encoder #(.WIDTH(8)) encoder2(.clk(clk), .reset(reset), .a(enc2_a_db), .b(enc2_b_db), .value(enc2));
 
+   wire [10:0] hue;
+   assign hue = enc0 > 11'h5ff ? 11'h5ff: enc0;
+   wire [23:0] rgb;
+   __hsv2rgb__hsv2rgb hsv2rgb0(.h({5'b0,hue}), .s(enc1), .v(enc2), .out(rgb));
+   wire [7:0]  r = rgb[23:16];
+   wire [7:0]  g = rgb[15:8];
+   wire [7:0]  b = rgb[7:0];
+   
     // pwm modules
-    pwm #(.WIDTH(8)) pwm0(.clk(clk), .reset(reset), .out(pwm0_out), .level(enc0));
-    pwm #(.WIDTH(8)) pwm1(.clk(clk), .reset(reset), .out(pwm1_out), .level(enc1));
-    pwm #(.WIDTH(8)) pwm2(.clk(clk), .reset(reset), .out(pwm2_out), .level(enc2));
+    pwm #(.WIDTH(8)) pwm0(.clk(clk), .reset(reset), .out(pwm0_out), .level(r));
+    pwm #(.WIDTH(8)) pwm1(.clk(clk), .reset(reset), .out(pwm1_out), .level(g));
+    pwm #(.WIDTH(8)) pwm2(.clk(clk), .reset(reset), .out(pwm2_out), .level(b));
 
 endmodule

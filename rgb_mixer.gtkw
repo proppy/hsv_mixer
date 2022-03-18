@@ -28,7 +28,7 @@ rgb_mixer.enc0_b
 @200
 -
 @8024
-rgb_mixer.enc0[7:0]
+rgb_mixer.enc0[10:0]
 rgb_mixer.enc1[7:0]
 rgb_mixer.enc2[7:0]
 @200
