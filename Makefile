@@ -11,7 +11,13 @@ export COCOTB_REDUCED_LOG_FMT=1
 export PYTHONPATH := test:$(PYTHONPATH)
 export LIBPYTHON_LOC=$(shell cocotb-config --libpython)
 
-all: test_encoder test_debounce test_pwm test_rgb_mixer
+all: test_encoder test_debounce test_pwm test_rgb_mixer hls2rgb
+
+hsv2rgb:
+	interpreter_main src/hsv2rgb.x
+	ir_converter_main --entry hsv2rgb src/hsv2rgb.x > src/hsv2rgb.ir
+	opt_main src/hsv2rgb.ir > src/hsv2rgb.opt.ir
+	codegen_main --generator=combinational src/hsv2rgb.opt.ir > src/hsv2rgb.v
 
 # if you run rules with NOASSERT=1 it will set PYTHONOPTIMIZE, which turns off assertions in the tests
 test_rgb_mixer:
