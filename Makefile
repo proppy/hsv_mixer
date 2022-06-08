@@ -15,7 +15,7 @@ all: test_encoder test_debounce test_pwm test_hsv_mixer
 
 hsv2rgb:
 	interpreter_main src/hsv2rgb.x
-	ir_converter_main --entry hsv2rgb src/hsv2rgb.x > src/hsv2rgb.ir
+	ir_converter_main --top=hsv2rgb src/hsv2rgb.x > src/hsv2rgb.ir
 	opt_main src/hsv2rgb.ir > src/hsv2rgb.opt.ir
 	codegen_main --generator=combinational src/hsv2rgb.opt.ir > src/hsv2rgb.v
 
